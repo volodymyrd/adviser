@@ -1,6 +1,6 @@
 package com.gmail.volodymyrdotsenko.adviser;
 
-import com.gmail.volodymyrdotsenko.adviser.poker.shell.Shell;
+import com.gmail.volodymyrdotsenko.shell.Shell;
 
 public class Console {
 

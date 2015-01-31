@@ -1,9 +1,13 @@
-package com.gmail.volodymyrdotsenko.adviser.poker.shell;
+package com.gmail.volodymyrdotsenko.shell;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashSet;
+import java.util.Set;
 
-public interface Shellable extends Runnable {
+public interface IShell extends Runnable {
+
+	Set<ICommand> commands = new HashSet<>();
 
 	String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -20,4 +24,12 @@ public interface Shellable extends Runnable {
 	void start();
 
 	void banner(Writer writer) throws IOException;
+
+	void regCommand(ICommand command) throws Exception;
+
+	void doCommand(String command) throws Exception;
+
+	public void setWorking(boolean working);
+
+	public boolean isWorking();
 }
