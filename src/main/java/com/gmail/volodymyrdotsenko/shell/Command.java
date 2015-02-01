@@ -77,7 +77,7 @@ public abstract class Command implements ICommand {
 	}
 
 	protected void buildHelpMessage(String info, String format) {
-		help = IShell.BLUE + info + " command format: " + IShell.GREEN + format
+		help = IShell.BLUE + info + ", command format: " + IShell.GREEN + format
 				+ IShell.RESET;
 	}
 }

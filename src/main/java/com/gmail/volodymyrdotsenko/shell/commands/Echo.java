@@ -12,8 +12,9 @@ public final class Echo extends Command {
 		super(shell);
 		code = "echo";
 		shortCode = "";
-		buildHelpMessage("Echo", "echo message");
-		enable = true;
+		buildHelpMessage("Print echo message", code + "(" + shortCode
+				+ ") message");
+		enable = false;
 	}
 
 	public static ICommand instance(IShell shell) {
@@ -27,7 +28,7 @@ public final class Echo extends Command {
 		if (params.length != 1) {
 			shell.errorCommandFormat(code);
 			shell.info(help);
-			
+
 			return;
 		}
 

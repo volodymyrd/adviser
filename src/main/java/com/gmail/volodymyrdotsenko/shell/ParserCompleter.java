@@ -15,10 +15,12 @@ public class ParserCompleter implements Completer {
 		try {
 
 			for (ICommand c : IShell.commands) {
-				Pattern p = Pattern.compile(buffer + "\\w+");
-				Matcher m = p.matcher(c.code());
-				if (m.matches())
-					candidates.add(c.code());
+				if (c.isEnable()) {
+					Pattern p = Pattern.compile(buffer + "\\w+");
+					Matcher m = p.matcher(c.code());
+					if (m.matches())
+						candidates.add(c.code());
+				}
 			}
 		} finally {
 
