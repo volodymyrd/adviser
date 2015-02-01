@@ -10,6 +10,7 @@ import com.gmail.volodymyrdotsenko.shell.commands.Echo;
 import com.gmail.volodymyrdotsenko.shell.commands.Exit;
 import com.gmail.volodymyrdotsenko.shell.commands.Quit;
 import com.gmail.volodymyrdotsenko.shell.commands.poker.Holdem;
+import com.gmail.volodymyrdotsenko.shell.commands.poker.Preflop;
 
 import jline.console.ConsoleReader;
 
@@ -35,6 +36,7 @@ public final class Shell implements IShell {
 			regCommand(Quit.instance(this));
 			regCommand(Echo.instance(this));
 			regCommand(Holdem.instance(this));
+			regCommand(Preflop.instance(this));
 		} catch (Exception ex) {
 			System.exit(-1);
 		}
@@ -183,5 +185,20 @@ public final class Shell implements IShell {
 	@Override
 	public Mode getMode() {
 		return this.mode;
+	}
+
+	@Override
+	public ICommand getCommandByCode(String code) {
+		for (ICommand c : commands) {
+			if (c.code().equals(code))
+				return c;
+		}
+
+		return null;
+	}
+
+	@Override
+	public void setPrompt(String prompt) {
+		reader.setPrompt(prompt);
 	}
 }

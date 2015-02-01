@@ -2,14 +2,15 @@ package com.gmail.volodymyrdotsenko.shell;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Properties;
+import java.util.Map;
 import java.util.Set;
 
 public interface IShell extends Runnable {
 
 	Set<ICommand> commands = new HashSet<>();
-	Properties sharedMemory = new Properties();
+	Map<String, Object> sharedMemory = new HashMap<>();
 
 	String LINE_SEPARATOR = System.getProperty("line.separator");
 
@@ -40,6 +41,10 @@ public interface IShell extends Runnable {
 	void setMode(Mode mode);
 
 	Mode getMode();
+
+	ICommand getCommandByCode(String code);
+
+	void setPrompt(String prompt);
 
 	boolean isWorking();
 

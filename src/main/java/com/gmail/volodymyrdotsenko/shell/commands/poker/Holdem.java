@@ -46,5 +46,10 @@ public final class Holdem extends Command {
 		shell.info("Now Adviser in Texas Holdem Mode");
 
 		enable = false;
+
+		shell.getCommandByCode("preflop").enable();
+
+		shell.setPrompt(IShell.GREEN + "holdem" + IShell.RED + "> "
+				+ IShell.RESET);
 	}
 }
