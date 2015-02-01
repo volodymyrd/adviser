@@ -29,7 +29,15 @@ public interface IShell extends Runnable {
 
 	void doCommand(String command) throws Exception;
 
-	public void setWorking(boolean working);
+	void setWorking(boolean working);
 
-	public boolean isWorking();
+	boolean isWorking();
+
+	void error(String message, String... params) throws IOException;
+
+	void errorCommandFormat(String command) throws IOException;
+
+	void warn(String message, String... params) throws IOException;
+
+	void info(String message, String... params) throws IOException;
 }

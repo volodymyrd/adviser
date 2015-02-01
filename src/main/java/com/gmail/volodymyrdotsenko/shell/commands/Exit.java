@@ -6,16 +6,23 @@ import com.gmail.volodymyrdotsenko.shell.IShell;
 
 public final class Exit extends Command {
 
-	public static ICommand instance() {
-		ICommand c = new Exit();
+	public Exit(IShell shell) {
+		super(shell);
 
-		c.registration("exit", "ex", "Exit from console");
+		code = "exit";
+		shortCode = "ex";
+		buildHelpMessage("Exit from console", code + "(" + shortCode + ")");
+		enable = true;
+	}
+
+	public static ICommand instance(IShell shell) {
+		ICommand c = new Exit(shell);
 
 		return c;
 	}
 
 	@Override
-	public void cmd(IShell shell) {
+	public void cmd(String... params) {
 		shell.setWorking(false);
 	}
 }

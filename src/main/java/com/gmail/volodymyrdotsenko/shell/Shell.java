@@ -2,9 +2,11 @@ package com.gmail.volodymyrdotsenko.shell;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.gmail.volodymyrdotsenko.shell.commands.Echo;
 import com.gmail.volodymyrdotsenko.shell.commands.Exit;
 import com.gmail.volodymyrdotsenko.shell.commands.Quit;
 
@@ -27,8 +29,9 @@ public final class Shell implements IShell {
 
 	public Shell() {
 		try {
-			regCommand(Exit.instance());
-			regCommand(Quit.instance());
+			regCommand(Exit.instance(this));
+			regCommand(Quit.instance(this));
+			regCommand(Echo.instance(this));
 		} catch (Exception ex) {
 			System.exit(-1);
 		}
@@ -90,24 +93,25 @@ public final class Shell implements IShell {
 		if (command.isEmpty())
 			return;
 
+		String[] params = command.split("\\s+");
+
 		for (ICommand c : commands) {
-			if (c.shortCode().equals(command) || c.code().equals(command)) {
-				if (c.isEnable())
-					c.cmd(this);
-				else
-					reader.getOutput()
-							.write(YELLOW
-									+ "Command "
-									+ command
-									+ " was found but not available in this time"
-									+ RESET);
+			if (c.shortCode().equals(params[0]) || c.code().equals(params[0])) {
+				if (c.isEnable()) {
+					int l = params.length;
+					if (l > 1)
+						c.cmd(Arrays.copyOfRange(params, 1, l));
+					else
+						c.cmd();
+				} else
+					warn("Command {0} was found but not available in this time",
+							command);
 
 				return;
 			}
 		}
 
-		reader.getOutput().write(
-				RED + "Command " + command + " not found" + RESET);
+		error("Command {0} not found", command);
 
 		reader.println();
 	}
@@ -125,5 +129,44 @@ public final class Shell implements IShell {
 							+ command.shortCode());
 
 		commands.add(command);
+	}
+
+	@Override
+	public void error(String message, String... params) throws IOException {
+
+		reader.print(RED + buildParamMessage(message, params));
+
+		reader.println(RESET);
+	}
+
+	@Override
+	public void warn(String message, String... params) throws IOException {
+		reader.print(YELLOW + buildParamMessage(message, params));
+
+		reader.println(RESET);
+	}
+
+	@Override
+	public void info(String message, String... params) throws IOException {
+		reader.print(GREEN + buildParamMessage(message, params));
+
+		reader.println(RESET);
+	}
+
+	private String buildParamMessage(String message, String... params) {
+
+		if (params == null || params.length == 0)
+			return message;
+
+		for (int i = 0; i < params.length; i++) {
+			message = message.replaceFirst("\\{" + i + "\\}", params[i]);
+		}
+
+		return message;
+	}
+
+	@Override
+	public void errorCommandFormat(String command) throws IOException {
+		error("Format command {0} is not correct", command);
 	}
 }

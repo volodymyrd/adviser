@@ -1,22 +1,22 @@
 package com.gmail.volodymyrdotsenko.shell;
 
+import java.io.IOException;
+
 public abstract class Command implements ICommand {
 
-	private String code;
-	private String shortCode;
-	private String help;
-	private boolean enable;
+	protected String code;
+	protected String shortCode;
+	protected String help;
+	protected boolean enable;
+	protected IShell shell;
 
-	@Override
-	public void registration(String code, String shortCode, String help) {
-		this.code = code;
-		this.help = help;
-		this.shortCode = shortCode;
-		this.enable = true;
+	public Command(IShell shell) {
+		super();
+		this.shell = shell;
 	}
 
 	@Override
-	public abstract void cmd(IShell shell);
+	public abstract void cmd(String... params) throws IOException;
 
 	@Override
 	public boolean isEnable() {
@@ -45,7 +45,7 @@ public abstract class Command implements ICommand {
 	public String shortCode() {
 		return shortCode;
 	}
-	
+
 	@Override
 	public String help() {
 		return help;
@@ -74,5 +74,10 @@ public abstract class Command implements ICommand {
 		} else if (!code.equals(other.code))
 			return false;
 		return true;
+	}
+
+	protected void buildHelpMessage(String info, String format) {
+		help = IShell.BLUE + info + " command format: " + IShell.GREEN + format
+				+ IShell.RESET;
 	}
 }

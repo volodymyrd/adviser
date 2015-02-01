@@ -1,10 +1,10 @@
 package com.gmail.volodymyrdotsenko.shell;
 
+import java.io.IOException;
+
 public interface ICommand {
 
-	void registration(String code, String shortCode, String help);
-
-	void cmd(IShell shell);
+	void cmd(String... params) throws IOException;
 
 	boolean isEnable();
 
