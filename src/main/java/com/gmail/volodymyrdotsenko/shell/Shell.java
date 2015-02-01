@@ -9,6 +9,7 @@ import java.util.Set;
 import com.gmail.volodymyrdotsenko.shell.commands.Echo;
 import com.gmail.volodymyrdotsenko.shell.commands.Exit;
 import com.gmail.volodymyrdotsenko.shell.commands.Quit;
+import com.gmail.volodymyrdotsenko.shell.commands.poker.Holdem;
 
 import jline.console.ConsoleReader;
 
@@ -18,6 +19,7 @@ public final class Shell implements IShell {
 	private boolean working;
 	private Set<String> code = new HashSet<>();
 	private Set<String> shortCode = new HashSet<>();
+	private Mode mode;
 
 	public void setWorking(boolean working) {
 		this.working = working;
@@ -32,6 +34,7 @@ public final class Shell implements IShell {
 			regCommand(Exit.instance(this));
 			regCommand(Quit.instance(this));
 			regCommand(Echo.instance(this));
+			regCommand(Holdem.instance(this));
 		} catch (Exception ex) {
 			System.exit(-1);
 		}
@@ -49,6 +52,8 @@ public final class Shell implements IShell {
 			banner(reader.getOutput());
 
 			reader.setPrompt(GREEN + "adviser" + RED + "> " + RESET);
+
+			mode = Mode.COMMON;
 
 			String s = "";
 
@@ -168,5 +173,15 @@ public final class Shell implements IShell {
 	@Override
 	public void errorCommandFormat(String command) throws IOException {
 		error("Format command {0} is not correct", command);
+	}
+
+	@Override
+	public void setMode(Mode mode) {
+		this.mode = mode;
+	}
+
+	@Override
+	public Mode getMode() {
+		return this.mode;
 	}
 }

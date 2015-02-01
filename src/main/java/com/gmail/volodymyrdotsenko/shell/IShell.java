@@ -3,13 +3,19 @@ package com.gmail.volodymyrdotsenko.shell;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 public interface IShell extends Runnable {
 
 	Set<ICommand> commands = new HashSet<>();
+	Properties sharedMemory = new Properties();
 
 	String LINE_SEPARATOR = System.getProperty("line.separator");
+
+	enum Mode {
+		COMMON, HOLDEM
+	}
 
 	String RESET = "\u001B[0m";
 	String BLACK = "\u001B[30m";
@@ -30,6 +36,10 @@ public interface IShell extends Runnable {
 	void doCommand(String command) throws Exception;
 
 	void setWorking(boolean working);
+
+	void setMode(Mode mode);
+
+	Mode getMode();
 
 	boolean isWorking();
 
