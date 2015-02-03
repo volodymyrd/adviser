@@ -112,7 +112,7 @@ public class TexasHoldEm {
 
 			h.clear();
 		}
-		
+
 		System.out.println("quadsHands: " + quadsHands.size());
 	}
 
@@ -313,9 +313,9 @@ public class TexasHoldEm {
 		}
 
 		System.out.println("twoPairHands: " + twoPairHands.size());
-//		for (Hand hp : twoPairHands) {
-//			System.out.println(hp);
-//		}
+		// for (Hand hp : twoPairHands) {
+		// System.out.println(hp);
+		// }
 	}
 
 	private Set<Hand> buildPair() {
@@ -353,5 +353,14 @@ public class TexasHoldEm {
 		buildStraightHands();
 		buildTripsHands();
 		buildTwoPairHands();
+	}
+
+	public int StraightFlushOuts(Hand hand) {
+		int i = 0;
+		for (Hand h : straightFlushHands)
+			if (h.containsAll(hand))
+				i++;
+
+		return i;
 	}
 }

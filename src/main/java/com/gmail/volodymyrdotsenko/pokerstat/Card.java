@@ -13,14 +13,12 @@ public class Card implements Comparable<Card> {
 		return suit;
 	}
 
-	// public Card(char[] card) {
-	// if (card == null || card.length != 2)
-	// throw new IllegalArgumentException(
-	// "card must be 2 elements (value and suit)");
-	// }
-
 	public Card(String value, String suit) {
 		this(CardValue.fromString(value), CardSuit.fromString(suit));
+	}
+
+	public Card(char value, char suit) {
+		this(String.valueOf(value), String.valueOf(suit));
 	}
 
 	public Card(CardValue value, CardSuit suit) {

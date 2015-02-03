@@ -17,6 +17,19 @@ public class Hand {
 		cards = new HashSet<>(length);
 	}
 
+	public Hand(String handString) {
+		int l = handString.length();
+
+		if (l % 2 != 0)
+			throw new IllegalArgumentException();
+
+		cards = new HashSet<>(l);
+
+		for (int i = 0; i < handString.length(); i += 2) {
+			cards.add(new Card(handString.charAt(i), handString.charAt(i + 1)));
+		}
+	}
+
 	public Hand(Card c, int length) {
 		cards = new HashSet<>(length);
 
@@ -181,7 +194,7 @@ public class Hand {
 		Hand h = new Hand(5);
 
 		// Kh, Qd, Qh, Ks
-		//[3h, 3d, 3s, 9c, 9h]
+		// [3h, 3d, 3s, 9c, 9h]
 		h.add(new Card("9", "s")).add(new Card("9", "d"))
 				.add(new Card("9", "h")).add(new Card("7", "c"))
 				.add(new Card("7", "h"));
