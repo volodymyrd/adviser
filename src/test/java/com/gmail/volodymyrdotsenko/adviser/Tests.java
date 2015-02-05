@@ -1,6 +1,5 @@
 package com.gmail.volodymyrdotsenko.adviser;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import com.gmail.volodymyrdotsenko.pokerstat.Card;
@@ -10,6 +9,19 @@ import com.gmail.volodymyrdotsenko.pokerstat.TexasHoldEm;
 public class Tests {
 
 	private static TexasHoldEm the = new TexasHoldEm();
+	private static Hand flopHand = new Hand(5);
+
+	static {
+		flopHand.add(new Card('5', 's')).add(new Card('j', 'd'))
+				.add(new Card('k', 's')).add(new Card('A', 's'))
+				.add(new Card('q', 'c'));
+	}
+
+	@Test
+	public void allFlopComb() {
+		for (Hand h : the.allFlopComb(flopHand))
+			System.out.println(h);
+	}
 
 	@Test
 	public void preflopCalcOut() {
@@ -18,7 +30,7 @@ public class Tests {
 		Hand h = new Hand(2);
 
 		h.add(new Card('4', 'c'));
-		h.add(new Card('A', 's'));
+		h.add(new Card('4', 'c'));
 
 		System.out.println("preflop: " + the.twoPairOuts(h));
 
@@ -30,15 +42,13 @@ public class Tests {
 	public void flopCalcOut() {
 		long s = System.currentTimeMillis();
 
-		Hand h = new Hand(5);
-
-		h.add(new Card('4', 'c'));
-		h.add(new Card('2', 's'));
-		h.add(new Card('t', 'h'));
-		h.add(new Card('k', 'd'));
-		h.add(new Card('A', 's'));
-
-		System.out.println("flop: " + the.twoPairOuts(h));
+		for (Hand hand : the.allFlopComb(flopHand)){
+			System.out.println("flop for hand " + hand + ": ");
+			
+			System.out.println("straightFlushOuts: " + the.straightFlushOuts(hand));
+			System.out.println("straightOuts: " + the.straightOuts(hand));
+			System.out.println("twoPairOuts: " + the.twoPairOuts(hand));			
+		}
 
 		System.out.println("flop: " + (System.currentTimeMillis() - s) / 1000.0
 				+ "sec.");

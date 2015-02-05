@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -16,6 +15,9 @@ import org.apache.commons.math3.util.CombinatoricsUtils;
 public class TexasHoldEm {
 
 	public final short handLength = 5;
+	public final short preFlopHandLength = 2;
+	public final short flopHandLength = 5;
+	public final short turnHandLength = 6;
 
 	private Set<Hand> straightFlushHands = new HashSet<>();
 
@@ -88,7 +90,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		System.out.println("straightFlushHands: " + straightFlushHands.size());
+		//System.out.println("straightFlushHands: " + straightFlushHands.size());
 		// for(Hand h1 : straightFlushHands)
 		// System.out.println(h1);
 	}
@@ -120,7 +122,7 @@ public class TexasHoldEm {
 			h.clear();
 		}
 
-		System.out.println("quadsHands: " + quadsHands.size());
+		//System.out.println("quadsHands: " + quadsHands.size());
 	}
 
 	private void buildFullHouseHands() {
@@ -158,7 +160,7 @@ public class TexasHoldEm {
 			it3 = CombinatoricsUtils.combinationsIterator(4, 3);
 		}
 
-		System.out.println("fullHouseHands: " + fullHouseHands.size());
+		//System.out.println("fullHouseHands: " + fullHouseHands.size());
 		// for (Hand h1 : fullHouseHands)
 		// System.out.println(h1);
 	}
@@ -189,7 +191,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		System.out.println("flushHands: " + flushHands.size());
+		//System.out.println("flushHands: " + flushHands.size());
 		// for(Hand h1 : flushHands){
 		// System.out.println(h1);
 		// }
@@ -225,7 +227,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		System.out.println("straightHands: " + straightHands.size());
+		//System.out.println("straightHands: " + straightHands.size());
 		// for (Hand h1 : straightHands) {
 		// System.out.println(h1);
 		// }
@@ -284,7 +286,7 @@ public class TexasHoldEm {
 			it3 = CombinatoricsUtils.combinationsIterator(4, 3);
 		}
 
-		System.out.println("tripsHands: " + tripsHands.size());
+		//System.out.println("tripsHands: " + tripsHands.size());
 		// for (Hand h1 : tripsHands) {
 		// System.out.println(h1);
 		// }
@@ -319,7 +321,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		System.out.println("twoPairHands: " + twoPairHands.size());
+		//System.out.println("twoPairHands: " + twoPairHands.size());
 		// for (Hand hp : twoPairHands) {
 		// System.out.println(hp);
 		// }
@@ -362,9 +364,38 @@ public class TexasHoldEm {
 		buildTwoPairHands();
 	}
 
+	public Set<Hand> allFlopComb(Hand hand) {
+		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
+				flopHandLength, 4);
+
+		Set<Hand> hands = new HashSet<>();
+
+		List<Card> cards = hand.getSorted();
+
+		while (it.hasNext()) {
+			Hand h = new Hand(4);
+			for (int i : it.next()) {
+				h.add(cards.get(i));
+			}
+
+			hands.add(h);
+		}
+
+		return hands;
+	}
+
 	public int straightFlushOuts(Hand hand) {
 		int i = 0;
 		for (Hand h : straightFlushHands)
+			if (h.containsAll(hand))
+				i++;
+
+		return i;
+	}
+
+	public int straightOuts(Hand hand) {
+		int i = 0;
+		for (Hand h : straightHands)
 			if (h.containsAll(hand))
 				i++;
 
