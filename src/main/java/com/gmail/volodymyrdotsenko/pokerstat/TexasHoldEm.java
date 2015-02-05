@@ -1,8 +1,13 @@
 package com.gmail.volodymyrdotsenko.pokerstat;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.commons.math3.util.CombinatoricsUtils;
 
@@ -362,5 +367,65 @@ public class TexasHoldEm {
 				i++;
 
 		return i;
+	}
+
+	private void calcOuts(Set<Hand> hands) {
+		final ExecutorService es = Executors.newFixedThreadPool(100);
+
+		final List<Future<Boolean>> futures = new ArrayList<>();
+
+		for (hand h : hands) {
+			futures.add(calc(dao, es, c));
+		}
+
+		es.shutdown();
+
+		for (final Future<Boolean> f : futures) {
+			if (f.get()) {
+
+			}
+		}
+	}
+	
+	private Future<Integer> calck(Set<>) {
+
+		// c = c.merge();
+
+		// final RssTag tags = c.getTags().merge();
+		// final RssChannel c1 = c;
+
+		return es.submit(new Callable<Boolean>() {
+			@Override
+			public Boolean call() {
+				try {
+					// c1.getFeeds();
+
+					Date lbd = dao.findLastPubDate(c1.getId());
+
+					RSSFeedParser parser = new RSSFeedParser(c1.getName(), lbd,
+							c1.getUrl(), c1.getTags());
+
+					Feed f = parser.readFeed();
+
+					if (f == null)
+						return true;
+
+					f.setChannel(c1);
+
+					dao.addFeed(c1.getId(), lbd, f);
+
+					return true;
+				} catch (Exception ex) {
+					logger.error("Error in rss-chanel: " + c1.getName()
+							+ " url:" + c1.getUrl());
+
+					ex.printStackTrace();
+
+					return false;
+				} finally {
+				}
+			}
+
+		});
 	}
 }
