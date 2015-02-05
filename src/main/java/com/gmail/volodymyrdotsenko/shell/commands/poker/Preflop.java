@@ -92,6 +92,6 @@ public final class Preflop extends Command {
 		TexasHoldEm the = (TexasHoldEm) IShell.sharedMemory.get(Holdem.HOLDEM);
 
 		shell.info("Straight Flush outs: {0}",
-				String.valueOf(the.StraightFlushOuts(hand)));
+				String.valueOf(the.straightFlushOuts(hand)));
 	}
 }

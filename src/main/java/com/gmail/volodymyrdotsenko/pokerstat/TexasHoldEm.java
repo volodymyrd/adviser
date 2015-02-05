@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -360,7 +362,7 @@ public class TexasHoldEm {
 		buildTwoPairHands();
 	}
 
-	public int StraightFlushOuts(Hand hand) {
+	public int straightFlushOuts(Hand hand) {
 		int i = 0;
 		for (Hand h : straightFlushHands)
 			if (h.containsAll(hand))
@@ -369,63 +371,89 @@ public class TexasHoldEm {
 		return i;
 	}
 
-	private void calcOuts(Set<Hand> hands) {
-		final ExecutorService es = Executors.newFixedThreadPool(100);
+	public int twoPairOuts(Hand hand) {
+		int i = 0;
+		for (Hand h : twoPairHands)
+			if (h.containsAll(hand))
+				i++;
 
-		final List<Future<Boolean>> futures = new ArrayList<>();
+		return i;
+	}
 
-		for (hand h : hands) {
-			futures.add(calc(dao, es, c));
+	public int straightFlushOutsParallel(Hand hand) {
+		try {
+			return calcOuts(hand, straightFlushHands);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+
+		return 0;
+	}
+
+	public int twoPairOutsParallel(Hand hand) {
+		try {
+			return calcOuts(hand, twoPairHands);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return 0;
+	}
+
+	private static final int numThreads = 10;
+
+	private int calcOuts(final Hand hand, final Set<Hand> hands)
+			throws Exception {
+
+		final ExecutorService es = Executors.newFixedThreadPool(numThreads);
+
+		final List<Future<Integer>> futures = new ArrayList<>();
+
+		int groupSize = hands.size() / numThreads + 1;
+
+		Iterator<Hand> it = hands.iterator();
+
+		Set<Hand> subHands = new HashSet<>(groupSize);
+
+		while (it.hasNext()) {
+			subHands.add(it.next());
+
+			if (subHands.size() == groupSize) {
+				futures.add(count(hand, es, subHands));
+
+				subHands = new HashSet<>(groupSize);
+			}
+		}
+
+		if (subHands.size() > 0)
+			futures.add(count(hand, es, subHands));
 
 		es.shutdown();
 
-		for (final Future<Boolean> f : futures) {
-			if (f.get()) {
+		int i = 0;
 
-			}
+		for (final Future<Integer> f : futures) {
+			i += f.get();
 		}
+
+		return i;
 	}
-	
-	private Future<Integer> calck(Set<>) {
 
-		// c = c.merge();
+	private Future<Integer> count(final Hand hand, final ExecutorService es,
+			final Set<Hand> hands) {
 
-		// final RssTag tags = c.getTags().merge();
-		// final RssChannel c1 = c;
+		return es.submit(new Callable<Integer>() {
 
-		return es.submit(new Callable<Boolean>() {
 			@Override
-			public Boolean call() {
-				try {
-					// c1.getFeeds();
+			public Integer call() {
+				int i = 0;
 
-					Date lbd = dao.findLastPubDate(c1.getId());
+				for (Hand h : hands)
+					if (h.containsAll(hand))
+						i++;
 
-					RSSFeedParser parser = new RSSFeedParser(c1.getName(), lbd,
-							c1.getUrl(), c1.getTags());
-
-					Feed f = parser.readFeed();
-
-					if (f == null)
-						return true;
-
-					f.setChannel(c1);
-
-					dao.addFeed(c1.getId(), lbd, f);
-
-					return true;
-				} catch (Exception ex) {
-					logger.error("Error in rss-chanel: " + c1.getName()
-							+ " url:" + c1.getUrl());
-
-					ex.printStackTrace();
-
-					return false;
-				} finally {
-				}
+				return i;
 			}
-
 		});
 	}
 }
