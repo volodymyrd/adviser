@@ -1,9 +1,12 @@
 package com.gmail.volodymyrdotsenko.pokerstat;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -19,7 +22,39 @@ public class TexasHoldEm {
 	public final short flopHandLength = 5;
 	public final short turnHandLength = 6;
 
+	public static class StraightFlushComparator implements Comparator<Hand> {
+
+		@Override
+		public int compare(Hand h1, Hand h2) {
+			if (h1.equals(h2))
+				return 0;
+			else {
+				int r1 = h1.getRank();
+				int r2 = h2.getRank();
+
+				if (r1 == r2)
+					return 0;
+
+				List<CardValue> minRanks = new ArrayList<>();
+				minRanks.add(CardValue.TWO);
+				minRanks.add(CardValue.ACE);
+
+				if (h1.containsAll(minRanks))
+					return -1;
+
+				if (h2.containsAll(minRanks))
+					return 1;
+
+				if (r1 < r2)
+					return -1;
+				else
+					return 1;
+			}
+		}
+	}
+
 	private Set<Hand> straightFlushHands = new HashSet<>();
+	private Map<Hand, Integer> straightFlushHandsMap = new HashMap<>();
 
 	// Four of a kind
 	private Set<Hand> quadsHands = new HashSet<>();
@@ -34,6 +69,10 @@ public class TexasHoldEm {
 	private Set<Hand> tripsHands = new HashSet<>();
 
 	private Set<Hand> twoPairHands = new HashSet<>();
+
+	public Map<Hand, Integer> getStraightFlushHandsMap() {
+		return straightFlushHandsMap;
+	}
 
 	public Set<Hand> getStraightFlushHands() {
 		return straightFlushHands;
@@ -90,9 +129,21 @@ public class TexasHoldEm {
 			}
 		}
 
-		//System.out.println("straightFlushHands: " + straightFlushHands.size());
-		// for(Hand h1 : straightFlushHands)
-		// System.out.println(h1);
+		StraightFlushComparator comp = new StraightFlushComparator();
+
+		// System.out.println("straightFlushHands: " +
+		// straightFlushHands.size());
+		for (Hand h1 : straightFlushHands) {
+			// System.out.println(h1);
+			int n = 0;
+
+			for (Hand h2 : straightFlushHands) {
+				if (comp.compare(h1, h2) < 0)
+					n++;
+			}
+
+			straightFlushHandsMap.put(h1, n);
+		}
 	}
 
 	private void buildQuadsHands() {
@@ -122,7 +173,7 @@ public class TexasHoldEm {
 			h.clear();
 		}
 
-		//System.out.println("quadsHands: " + quadsHands.size());
+		// System.out.println("quadsHands: " + quadsHands.size());
 	}
 
 	private void buildFullHouseHands() {
@@ -160,7 +211,7 @@ public class TexasHoldEm {
 			it3 = CombinatoricsUtils.combinationsIterator(4, 3);
 		}
 
-		//System.out.println("fullHouseHands: " + fullHouseHands.size());
+		// System.out.println("fullHouseHands: " + fullHouseHands.size());
 		// for (Hand h1 : fullHouseHands)
 		// System.out.println(h1);
 	}
@@ -191,7 +242,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		//System.out.println("flushHands: " + flushHands.size());
+		// System.out.println("flushHands: " + flushHands.size());
 		// for(Hand h1 : flushHands){
 		// System.out.println(h1);
 		// }
@@ -227,7 +278,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		//System.out.println("straightHands: " + straightHands.size());
+		// System.out.println("straightHands: " + straightHands.size());
 		// for (Hand h1 : straightHands) {
 		// System.out.println(h1);
 		// }
@@ -286,7 +337,7 @@ public class TexasHoldEm {
 			it3 = CombinatoricsUtils.combinationsIterator(4, 3);
 		}
 
-		//System.out.println("tripsHands: " + tripsHands.size());
+		// System.out.println("tripsHands: " + tripsHands.size());
 		// for (Hand h1 : tripsHands) {
 		// System.out.println(h1);
 		// }
@@ -321,7 +372,7 @@ public class TexasHoldEm {
 			}
 		}
 
-		//System.out.println("twoPairHands: " + twoPairHands.size());
+		// System.out.println("twoPairHands: " + twoPairHands.size());
 		// for (Hand hp : twoPairHands) {
 		// System.out.println(hp);
 		// }

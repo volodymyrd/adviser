@@ -2,6 +2,7 @@ package com.gmail.volodymyrdotsenko.pokerstat;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -65,8 +66,42 @@ public class Hand {
 		return cards.contains(h.getCards());
 	}
 
+	public List<CardValue> allRanks() {
+		List<CardValue> ranks = new ArrayList<>();
+
+		for (Card c : cards) {
+			ranks.add(c.getValue());
+		}
+
+		return ranks;
+	}
+
+	public List<CardSuit> allSuits() {
+		List<CardSuit> suits = new ArrayList<>();
+
+		for (Card c : cards) {
+			suits.add(c.getSuit());
+		}
+
+		return suits;
+	}
+
+	public boolean containsAll(List<CardValue> ranks) {
+		return allRanks().containsAll(ranks);
+	}
+
 	public boolean containsAll(Hand h) {
 		return cards.containsAll(h.getCards());
+	}
+
+	public int getRank() {
+		int r = 0;
+
+		for (Card c : cards) {
+			r += c.getValue().ordinal();
+		}
+
+		return r;
 	}
 
 	public Set<Card> getCards() {
@@ -191,15 +226,19 @@ public class Hand {
 	}
 
 	public static void main(String[] args) {
-		Hand h = new Hand(5);
-
+		Hand h1 = new Hand(5);
+		Hand h2 = new Hand(5);
+		
 		// Kh, Qd, Qh, Ks
 		// [3h, 3d, 3s, 9c, 9h]
-		h.add(new Card("9", "s")).add(new Card("9", "d"))
-				.add(new Card("9", "h")).add(new Card("7", "c"))
-				.add(new Card("7", "h"));
+		h1.add(new Card("2", "d")).add(new Card("3", "d"))
+				.add(new Card("4", "d")).add(new Card("5", "d"))
+				.add(new Card("A", "d"));
+		h2.add(new Card("2", "c")).add(new Card("3", "c"))
+				.add(new Card("4", "c")).add(new Card("5", "c"))
+				.add(new Card("A", "c"));
 
-		System.out.println(h.containsQuads());
-		System.out.println(h.containsTrips());
+		System.out.println(h1.getRank());
+		System.out.println(h2.getRank());
 	}
 }

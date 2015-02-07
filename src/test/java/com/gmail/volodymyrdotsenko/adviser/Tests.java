@@ -53,4 +53,9 @@ public class Tests {
 		System.out.println("flop: " + (System.currentTimeMillis() - s) / 1000.0
 				+ "sec.");
 	}
+	
+	@Test
+	public void handsCompare(){
+		Hand h1 = new Hand(5);
+	}
 }
