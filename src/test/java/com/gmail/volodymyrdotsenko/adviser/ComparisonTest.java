@@ -32,11 +32,32 @@ public class ComparisonTest {
 	}
 
 	@Test
+	public void QuadsHandsComparator() {
+		// List<Hand> hands = new ArrayList<>(the.getQuadsHands());
+		//
+		// Collections.sort(hands, new TexasHoldEm.QuadsHandsComparator());
+		//
+		// for (Hand h : hands) {
+		// System.out.println(h);
+		// }
+	}
+
+	@Test
 	public void StraightFlushMap() {
-		Map<Hand, Integer> map = the.getStraightFlushHandsMap();
+		// Map<Hand, Integer> map = the.getStraightFlushHandsMap();
+		//
+		// for (Entry<Hand, Integer> e : map.entrySet()) {
+		// System.out.println(e.getKey() + ": " + e.getValue());
+		// }
+	}
+
+	@Test
+	public void QuadsHandsMap() {
+		Map<Hand, Integer> map = the.getQuadsHandsMap();
 
 		for (Entry<Hand, Integer> e : map.entrySet()) {
 			System.out.println(e.getKey() + ": " + e.getValue());
 		}
 	}
+
 }

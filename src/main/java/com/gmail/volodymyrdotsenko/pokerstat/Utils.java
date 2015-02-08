@@ -9,6 +9,36 @@ import org.apache.commons.math3.util.CombinatoricsUtils;
 
 public class Utils {
 
+	public static long allFlopCombination(int cardsNum, int playersNum){
+		int i = 0;
+
+		long p = 1;
+		
+		while (i++ < playersNum - 1) {
+			int k = (cardsNum - 2) - 2 * (i - 1);
+
+			p *= CombinatoricsUtils.binomialCoefficient(k, 2);
+		}
+		
+		p *= CombinatoricsUtils.binomialCoefficient(cardsNum - 2 * playersNum, 3);
+
+		return p / CombinatoricsUtils.factorial(playersNum);		
+	}
+	
+	public static long allCombination(int cardsNum, int playersNum) {
+		int i = 0;
+
+		long p = 1;
+
+		while (i++ < playersNum - 1) {
+			int k = cardsNum - 2 * (i - 1);
+
+			p *= CombinatoricsUtils.binomialCoefficient(k, 2);
+		}
+
+		return p / CombinatoricsUtils.factorial(playersNum);
+	}
+
 	public static int[][] permutations(int n, int k) {
 
 		int[] ind = new int[n];
