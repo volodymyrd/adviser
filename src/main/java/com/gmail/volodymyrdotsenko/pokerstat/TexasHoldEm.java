@@ -76,11 +76,12 @@ public class TexasHoldEm {
 
 	private Set<Hand> straightFlushHands = new HashSet<>();
 	private Map<Hand, Integer> straightFlushHandsMap = new HashMap<>();
-	private Map<Hand, Set<Hand>> straightFlushStrongHands = new HashMap<>();
+	private Map<Hand, Set<Hand>> straightFlushStrongHandsMap = new HashMap<>();
 
 	// Four of a kind
 	private Set<Hand> quadsHands = new HashSet<>();
 	private Map<Hand, Integer> quadsHandsMap = new HashMap<>();
+	private Map<Hand, Set<Hand>> quadsStrongHandsMap = new HashMap<>();
 
 	private Set<Hand> fullHouseHands = new HashSet<>();
 
@@ -97,8 +98,8 @@ public class TexasHoldEm {
 		return straightFlushHandsMap;
 	}
 
-	public Map<Hand, Set<Hand>> getStraightFlushStrongHands() {
-		return straightFlushStrongHands;
+	public Map<Hand, Set<Hand>> getStraightFlushStrongHandsMap() {
+		return straightFlushStrongHandsMap;
 	}
 
 	public Set<Hand> getStraightFlushHands() {
@@ -107,6 +108,10 @@ public class TexasHoldEm {
 
 	public Map<Hand, Integer> getQuadsHandsMap() {
 		return quadsHandsMap;
+	}
+
+	public Map<Hand, Set<Hand>> getQuadsStrongHandsMap() {
+		return quadsStrongHandsMap;
 	}
 
 	public Set<Hand> getQuadsHands() {
@@ -176,7 +181,7 @@ public class TexasHoldEm {
 			}
 
 			straightFlushHandsMap.put(h1, n);
-			straightFlushStrongHands.put(h1, strong);
+			straightFlushStrongHandsMap.put(h1, strong);
 		}
 	}
 
@@ -209,18 +214,20 @@ public class TexasHoldEm {
 
 		QuadsHandsComparator comp = new QuadsHandsComparator();
 
-		// System.out.println("quadsHands: " +
-		// quadsHands.size());
 		for (Hand h1 : quadsHands) {
-			// System.out.println(h1);
 			int n = 0;
-
+			Set<Hand> strong = new HashSet<>();
 			for (Hand h2 : quadsHands) {
-				if (comp.compare(h1, h2) < 0)
+				if (comp.compare(h1, h2) < 0) {
 					n++;
+					strong.add(h2);
+				}
 			}
 
+			strong.addAll(straightFlushHands);
+
 			quadsHandsMap.put(h1, n + straightFlushHands.size());
+			quadsStrongHandsMap.put(h1, strong);
 		}
 	}
 

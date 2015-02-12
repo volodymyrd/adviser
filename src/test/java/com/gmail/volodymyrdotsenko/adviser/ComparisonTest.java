@@ -44,8 +44,29 @@ public class ComparisonTest {
 
 	@Test
 	public void StraightFlushMap() {
-		Map<Hand, Integer> map = the.getStraightFlushHandsMap();
-		Map<Hand, Set<Hand>> strong = the.getStraightFlushStrongHands();
+//		Map<Hand, Integer> map = the.getStraightFlushHandsMap();
+//		Map<Hand, Set<Hand>> strong = the.getStraightFlushStrongHandsMap();
+//
+//		for (Entry<Hand, Integer> e : map.entrySet()) {
+//			System.out.println("--------------start-------------");
+//			System.out.println(e.getKey() + ": " + e.getValue());
+//			System.out.println("--------------strong-------------");
+//			System.out.println(strong.get(e.getKey()).size());
+//			for (Hand h : strong.get(e.getKey())) {
+//				System.out.println(h);
+//			}
+//			
+//			if((e.getValue() - strong.get(e.getKey()).size()) != 0)
+//				System.out.println(e.getKey() + ": error");
+//			
+//			System.out.println("--------------end-------------");
+//		}
+	}
+
+	@Test
+	public void QuadsHandsMap() {
+		Map<Hand, Integer> map = the.getQuadsHandsMap();
+		Map<Hand, Set<Hand>> strong = the.getQuadsStrongHandsMap();
 
 		for (Entry<Hand, Integer> e : map.entrySet()) {
 			System.out.println("--------------start-------------");
@@ -61,15 +82,6 @@ public class ComparisonTest {
 			
 			System.out.println("--------------end-------------");
 		}
-	}
-
-	@Test
-	public void QuadsHandsMap() {
-		// Map<Hand, Integer> map = the.getQuadsHandsMap();
-		//
-		// for (Entry<Hand, Integer> e : map.entrySet()) {
-		// System.out.println(e.getKey() + ": " + e.getValue());
-		// }
 	}
 
 }
