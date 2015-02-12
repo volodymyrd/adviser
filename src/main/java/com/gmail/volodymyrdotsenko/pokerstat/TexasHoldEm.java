@@ -76,6 +76,7 @@ public class TexasHoldEm {
 
 	private Set<Hand> straightFlushHands = new HashSet<>();
 	private Map<Hand, Integer> straightFlushHandsMap = new HashMap<>();
+	private Map<Hand, Set<Hand>> straightFlushStrongHands = new HashMap<>();
 
 	// Four of a kind
 	private Set<Hand> quadsHands = new HashSet<>();
@@ -94,6 +95,10 @@ public class TexasHoldEm {
 
 	public Map<Hand, Integer> getStraightFlushHandsMap() {
 		return straightFlushHandsMap;
+	}
+
+	public Map<Hand, Set<Hand>> getStraightFlushStrongHands() {
+		return straightFlushStrongHands;
 	}
 
 	public Set<Hand> getStraightFlushHands() {
@@ -162,13 +167,16 @@ public class TexasHoldEm {
 		for (Hand h1 : straightFlushHands) {
 			// System.out.println(h1);
 			int n = 0;
-
+			Set<Hand> strong = new HashSet<>();
 			for (Hand h2 : straightFlushHands) {
-				if (comp.compare(h1, h2) < 0)
+				if (comp.compare(h1, h2) < 0) {
 					n++;
+					strong.add(h2);
+				}
 			}
 
 			straightFlushHandsMap.put(h1, n);
+			straightFlushStrongHands.put(h1, strong);
 		}
 	}
 
