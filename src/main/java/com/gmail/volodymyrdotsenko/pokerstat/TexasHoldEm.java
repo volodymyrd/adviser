@@ -490,6 +490,25 @@ public class TexasHoldEm {
 		return hands;
 	}
 
+	public int straightFlushOuts(Hand hand, int num) {
+		int i = 0;
+
+		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
+				hand.size(), hand.size() - num);
+		List<Card> cards = hand.getSorted();
+
+		while (it.hasNext()) {
+			Hand h = new Hand(hand.size() - num);
+
+			for (int ind : it.next())
+				h.add(cards.get(ind));
+
+			i += straightFlushOuts(h);
+		}
+
+		return i;
+	}
+
 	public int straightFlushOuts(Hand hand) {
 		int i = 0;
 		for (Hand h : straightFlushHands)
