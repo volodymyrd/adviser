@@ -494,11 +494,11 @@ public class TexasHoldEm {
 		int i = 0;
 
 		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
-				hand.size(), hand.size() - num);
+				hand.size(), handLength - num);
 		List<Card> cards = hand.getSorted();
 
 		while (it.hasNext()) {
-			Hand h = new Hand(hand.size() - num);
+			Hand h = new Hand(handLength - num);
 
 			for (int ind : it.next())
 				h.add(cards.get(ind));
@@ -514,6 +514,59 @@ public class TexasHoldEm {
 		for (Hand h : straightFlushHands)
 			if (h.containsAll(hand))
 				i++;
+
+		// if (i > 0)
+		// System.out.println(hand);
+
+		return i;
+	}
+
+	public int quadsOuts(Hand hand) {
+		int i = 0;
+		for (Hand h : quadsHands)
+			if (h.containsAll(hand))
+				i++;
+
+		if (i > 0)
+		 System.out.println(hand);
+
+		return i;
+	}
+
+	public int quadsOuts(Hand hand, int num) {
+		int i = 0;
+
+		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
+				hand.size(), handLength - num);
+		List<Card> cards = hand.getSorted();
+
+		while (it.hasNext()) {
+			Hand h = new Hand(handLength - num);
+
+			for (int ind : it.next())
+				h.add(cards.get(ind));
+
+			i += quadsOuts(h);
+		}
+
+		return i;
+	}
+
+	public int straightOuts(Hand hand, int num) {
+		int i = 0;
+
+		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
+				hand.size(), handLength - num);
+		List<Card> cards = hand.getSorted();
+
+		while (it.hasNext()) {
+			Hand h = new Hand(handLength - num);
+
+			for (int ind : it.next())
+				h.add(cards.get(ind));
+
+			i += straightOuts(h);
+		}
 
 		return i;
 	}
