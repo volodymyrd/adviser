@@ -45,8 +45,8 @@ public class Tests {
 		for (Hand hand : the.allFlopComb(flopHand)){
 			System.out.println("flop for hand " + hand + ": ");
 			
-			System.out.println("straightFlushOuts: " + the.straightFlushOuts(hand));
-			System.out.println("straightOuts: " + the.straightOuts(hand));
+			System.out.println("straightFlushOuts: " + the.straightFlushOuts(hand, null));
+			System.out.println("straightOuts: " + the.straightOuts(hand, null));
 			System.out.println("twoPairOuts: " + the.twoPairOuts(hand));			
 		}
 
