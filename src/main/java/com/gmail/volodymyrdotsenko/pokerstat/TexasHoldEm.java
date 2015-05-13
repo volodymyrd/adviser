@@ -74,6 +74,10 @@ public class TexasHoldEm {
 
 	}
 
+	public static class Statistic {
+
+	}
+
 	private Set<Hand> straightFlushHands = new HashSet<>();
 	private Map<Hand, Integer> straightFlushHandsMap = new HashMap<>();
 	private Map<Hand, Set<Hand>> straightFlushStrongHandsMap = new HashMap<>();
@@ -490,8 +494,8 @@ public class TexasHoldEm {
 		return hands;
 	}
 
-	public int straightFlushOuts(Hand hand, int num, Set<Hand> outs) {
-		int i = 0;
+	public int straightFlushOuts(Hand hand, int num, Set<Hand> outs,
+			Set<Hand> likely) {
 
 		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
 				hand.size(), handLength - num);
@@ -503,26 +507,33 @@ public class TexasHoldEm {
 			for (int ind : it.next())
 				h.add(cards.get(ind));
 
-			i += straightFlushOuts(h, outs);
+			straightFlushOuts(h, outs, likely);
 		}
 
-		return i;
+		return outs.size();
 	}
 
-	public int straightFlushOuts(Hand hand, Set<Hand> outs) {
-		int i = 0;
+	public int straightFlushOuts(Hand hand, Set<Hand> outs, Set<Hand> likely) {
 		for (Hand h : straightFlushHands)
 			if (h.containsAll(hand)) {
-				i++;
+				outs.add(h);
 
-				if (outs != null)
-					outs.add(h);
+				if (likely != null) {
+					Hand h1 = h.copy();
+					h1.getCards().removeAll(hand.getCards());
+					likely.add(h1);
+				}
 			}
 
-		// if (i > 0)
-		// System.out.println(hand);
+		return outs.size();
+	}
 
-		return i;
+	public void strongStraightFlushOuts(Hand hand, Hand base, Set<Hand> outs) {
+		for (Hand h : straightFlushHands)
+			if (!h.equals(base) && h.containsAll(hand)) {
+				if (new StraightFlushComparator().compare(h, base) < 0)
+					outs.add(h);
+			}
 	}
 
 	public int quadsOuts(Hand hand, int num, Set<Hand> outs) {

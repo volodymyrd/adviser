@@ -12,21 +12,34 @@ public class TexasHoldEmTest {
 	private Hand flopHand = new Hand("tcacjc8c7c");
 	private Hand turnHand = new Hand("tcacjc8c7ckd");
 	private Set<Hand> outs = new HashSet<>();
+	private Set<Hand> likely = new HashSet<>();
 
 	@Test
 	public void preflopOuts() {
 		System.out.println("-----------preFlop------------");
 		System.out.println("Straight Flush outs: "
-				+ String.valueOf(the.straightFlushOuts(preFlopHand, outs)));
-		System.out.println("Four of a kind outs: "
-				+ String.valueOf(the.quadsOuts(preFlopHand, outs)));
-		System.out.println("Straight outs: "
-				+ String.valueOf(the.straightOuts(preFlopHand, outs)));
+				+ String.valueOf(the.straightFlushOuts(preFlopHand, outs,
+						likely)));
+//		System.out.println("Four of a kind outs: "
+//				+ String.valueOf(the.quadsOuts(preFlopHand, outs)));
+//		System.out.println("Straight outs: "
+//				+ String.valueOf(the.straightOuts(preFlopHand, outs)));
 
+		System.out.println("---outs:");
 		for (Hand h : outs)
 			System.out.println(h);
 
 		System.out.println("Total outs: " + outs.size());
+
+		System.out.println("---likely:");
+		for (Hand h : likely)
+			System.out.println(h);
+
+		System.out.println("Total likely: " + likely.size());
+		
+		Set<Hand> loseOuts = new HashSet<>();
+		//for(Hand h : likely)
+			//the.strongStraightFlushOuts(h, base, loseOuts);
 
 		System.out.println("-------------------------------");
 	}
