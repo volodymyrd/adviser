@@ -1,9 +1,13 @@
 package com.gmail.volodymyrdotsenko.pokerstat;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Test;
+
+import com.gmail.volodymyrdotsenko.pokerstat.TexasHoldEm.HandCategory;
+import com.gmail.volodymyrdotsenko.pokerstat.TexasHoldEm.Statistic;
 
 public class TexasHoldEmTest {
 
@@ -15,15 +19,25 @@ public class TexasHoldEmTest {
 	private Set<Hand> likely = new HashSet<>();
 
 	@Test
+	public void preflopStat() {
+		the.buildStraightFlushStat(preFlopHand);
+
+		Map<HandCategory, Statistic> stat = the.getStat();
+
+		System.out.println(stat.get(HandCategory.STRAIGHTFLUSH).outs);
+		System.out.println(stat.get(HandCategory.STRAIGHTFLUSH).contrOuts);
+	}
+
+	// @Test
 	public void preflopOuts() {
 		System.out.println("-----------preFlop------------");
 		System.out.println("Straight Flush outs: "
 				+ String.valueOf(the.straightFlushOuts(preFlopHand, outs,
 						likely)));
-//		System.out.println("Four of a kind outs: "
-//				+ String.valueOf(the.quadsOuts(preFlopHand, outs)));
-//		System.out.println("Straight outs: "
-//				+ String.valueOf(the.straightOuts(preFlopHand, outs)));
+		// System.out.println("Four of a kind outs: "
+		// + String.valueOf(the.quadsOuts(preFlopHand, outs)));
+		// System.out.println("Straight outs: "
+		// + String.valueOf(the.straightOuts(preFlopHand, outs)));
 
 		System.out.println("---outs:");
 		for (Hand h : outs)
@@ -36,10 +50,10 @@ public class TexasHoldEmTest {
 			System.out.println(h);
 
 		System.out.println("Total likely: " + likely.size());
-		
+
 		Set<Hand> loseOuts = new HashSet<>();
-		//for(Hand h : likely)
-			//the.strongStraightFlushOuts(h, base, loseOuts);
+		// for(Hand h : likely)
+		// the.strongStraightFlushOuts(h, base, loseOuts);
 
 		System.out.println("-------------------------------");
 	}

@@ -22,6 +22,10 @@ public class TexasHoldEm {
 	public final short flopHandLength = 5;
 	public final short turnHandLength = 6;
 
+	public enum HandCategory {
+		STRAIGHTFLUSH, QUADS, FULLHOUSE, FLUSH, STRAIGHT, TRIPS, TWOPAIR, ONEPAIR
+	}
+
 	public static class StraightFlushComparator implements Comparator<Hand> {
 
 		@Override
@@ -75,7 +79,14 @@ public class TexasHoldEm {
 	}
 
 	public static class Statistic {
+		Set<Hand> outs = new HashSet<Hand>();
+		Set<Hand> contrOuts = new HashSet<Hand>();
+	}
 
+	private Map<HandCategory, Statistic> stat = new HashMap<>();
+
+	public Map<HandCategory, Statistic> getStat() {
+		return stat;
 	}
 
 	private Set<Hand> straightFlushHands = new HashSet<>();
@@ -474,6 +485,17 @@ public class TexasHoldEm {
 		buildTwoPairHands();
 	}
 
+	public void buildStraightFlushStat(Hand hand) {
+		Statistic st = new Statistic();
+
+		Set<Hand> l = new HashSet<>();
+		straightFlushOuts(hand, st.outs, l);
+		for (Hand h : l)
+			st.contrOuts.addAll(straightFlushContrOuts(h, hand));
+
+		stat.put(HandCategory.STRAIGHTFLUSH, st);
+	}
+
 	public Set<Hand> allFlopComb(Hand hand) {
 		Iterator<int[]> it = CombinatoricsUtils.combinationsIterator(
 				flopHandLength, 4);
@@ -528,12 +550,16 @@ public class TexasHoldEm {
 		return outs.size();
 	}
 
-	public void strongStraightFlushOuts(Hand hand, Hand base, Set<Hand> outs) {
+	public Set<Hand> straightFlushContrOuts(Hand hand, Hand base) {
+		Set<Hand> outs = new HashSet<>();
+
 		for (Hand h : straightFlushHands)
 			if (!h.equals(base) && h.containsAll(hand)) {
 				if (new StraightFlushComparator().compare(h, base) < 0)
 					outs.add(h);
 			}
+
+		return outs;
 	}
 
 	public int quadsOuts(Hand hand, int num, Set<Hand> outs) {
